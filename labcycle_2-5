@@ -1,0 +1,37 @@
+SQL> create table temp(a number);
+
+Table created.
+declare 
+i number;
+num temp%rowtype;
+cursor data is select * from temp;
+begin
+for i in 1..10 loop
+insert into temp values(i);
+end loop;
+open data;
+loop
+fetch data into num;
+dbms_output.put_line(num.a);
+exit when data%notfound;
+end loop;
+end;
+
+
+/*
+SQL>  @Z:\dbms\five.sql
+ 16  /
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+10
+
+PL/SQL procedure successfully completed.
+*/
