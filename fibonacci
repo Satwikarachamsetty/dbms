@@ -1,0 +1,37 @@
+declare
+n number:=&num;
+a number:=0;
+b number:=1;
+c number;
+i number:=0;
+begin 
+if (n=1) then
+dbms_output.put_line(a);
+elsif (n=2) then
+dbms_output.put_line(b);
+else
+dbms_output.put_line(a);
+dbms_output.put_line(b);
+while(i<>n-2) loop
+c:=a+b;
+a:=b;
+b:=c;
+dbms_output.put_line(c);
+i:=i+1;
+end loop;
+end if;
+end;
+
+
+/*SQL>  @Z:\dbms\fibonacci.sql
+ 24  /
+Enter value for num: 5
+old   2: n number:=&num;
+new   2: n number:=5;
+0
+1
+1
+2
+3
+
+PL/SQL procedure successfully completed.*/
