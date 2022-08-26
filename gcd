@@ -1,0 +1,65 @@
+declare
+a number:=&firstnumber;
+b number:=&secondnumber;
+a1 number:=a;
+b1 number:=b;
+gcd number;
+lcm number;
+r number;
+data demo_tab%rowtype;
+cursor gcd_data is select firstnumber,secondnumber,lcm,hcf from demo_tab;
+begin
+if (a>b) then
+while (mod(a,b)<>0) loop
+r:=mod(a,b);
+a:=b;
+b:=r;
+end loop;
+gcd:=b;
+dbms_output.put_line('gcd: '||gcd);
+else
+while(mod(b,a)<>0) loop
+r:=mod(b,a);
+b:=a;
+a:=r;
+end loop;
+gcd:=a;
+dbms_output.put_line('gcd: '||gcd);
+end if;
+lcm:=(a1*b1)/gcd;
+dbms_output.put_line('lcm: '||lcm);
+insert into demo_tab values(a1,b1,lcm,gcd);
+open gcd_data;
+loop 
+fetch gcd_data into data;
+dbms_output.put_line(data.firstnumber||' '||data.secondnumber||' '||data.lcm||' '||data.hcf);
+exit when gcd_data%notfound;
+end loop;
+end;
+/*
+SQL>  @Z:\dbms\gcd.sql
+ 40  /
+Enter value for firstnumber: 9
+old   2: a number:=&firstnumber;
+new   2: a number:=9;
+Enter value for secondnumber: 6
+old   3: b number:=&secondnumber;
+new   3: b number:=6;
+gcd: 3
+lcm: 18
+9 6 18 3
+9 6 18 3
+SQL>  @Z:\dbms\gcd.sql
+ 40  /
+Enter value for firstnumber: 12
+old   2: a number:=&firstnumber;
+new   2: a number:=12;
+Enter value for secondnumber: 8
+old   3: b number:=&secondnumber;
+new   3: b number:=8;
+gcd: 4
+lcm: 24
+9 6 18 3
+12 8 24 4
+12 8 24 4
+*/
