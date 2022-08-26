@@ -1,0 +1,37 @@
+declare
+n number:=&num;
+i number;
+flag number:=0;
+begin
+for i in 2..n-1 loop
+if(mod(n,i)=0) then
+flag:=1;
+end if;
+end loop;
+if(flag=1) then
+dbms_output.put_line(n||' is not a prime number');
+else
+dbms_output.put_line(n||' is prime number');
+end if;
+end;
+
+/*
+SQL>  @Z:\dbms\prime_number.sql
+ 18  /
+Enter value for num: 4
+old   2: n number:=&num;
+new   2: n number:=4;
+4 is not a prime number
+
+PL/SQL procedure successfully completed.
+
+SQL>  @Z:\dbms\prime_number.sql
+ 18  /
+Enter value for num: 5
+old   2: n number:=&num;
+new   2: n number:=5;
+5 is prime number
+
+PL/SQL procedure successfully completed.
+*/
+
