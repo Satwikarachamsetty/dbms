@@ -1,0 +1,60 @@
+SQL> create table employee(eno number(2),
+  2  ename varchar(20),
+  3  basicpay number(10));
+
+SQL> insert into employee values(1,'geetha',80000);
+
+1 row created.
+SQL> insert into employee values(2,'yamuna',1500);
+
+1 row created.
+
+SQL> insert into employee values(3,'satya',1330);
+
+1 row created.
+
+SQL> insert into employee values(4,'keerthy',2000);
+
+1 row created.
+
+declare
+name employee.ename%type;
+id employee.eno%type;
+sal employee.basicpay%type;
+hra number(5);
+da number(5);
+pf number(5);
+tax number(5);
+gs number(10);
+ns number(10);
+cursor data is select eno,ename,basicpay from employee;
+begin
+open data;
+loop
+fetch data into id,name,sal;
+if(data%found) then
+hra:=0.15*sal;
+da:=0.62*sal;
+gs:=hra+da+sal;
+if(gs>8000)then
+pf:=780;
+else 
+pf:=600;
+end if;
+tax:=0.02*sal;
+ns:=gs-pf-tax;
+dbms_output.put_line(id||' '||name||' '||hra||' '||da||' '||pf||' '||tax||' '||gs||' '||ns);
+end if;
+exit when data%notfound;
+end loop;
+end;
+
+output:
+SQL> @C:\Users\Admin\Desktop\sql\employee_salary.sql
+ 32  /
+1 geetha 12000 49600 780 1600 141600 139220
+2 yamuna 225 930 600 30 2655 2025
+3 satya 200 825 600 27 2355 1728
+4 keerthy 300 1240 600 40 3540 2900
+
+PL/SQL procedure successfully completed.
