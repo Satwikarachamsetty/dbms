@@ -1,0 +1,59 @@
+SQL> create table emp(empid number(3),
+  2  name varchar(20),
+  3  salary number(10)
+  4  dno number(3));
+
+Table created.
+
+SQL> insert into emp values(1,'geetha',2000000,1);
+
+1 row created.
+
+SQL> insert into emp values(2,'ram',15000,2);
+
+1 row created.
+
+SQL> insert into emp values(3,'nani',12000,2);
+
+1 row created.
+SQL> create table del_History(dno number(3),
+  2  Rowsdeleted number(3),
+  3  dt varchar(10));
+
+Table created.
+
+declare
+dept number(3):=&department;
+cursor data is select empid,dno from emp;
+id emp.empid%type;
+d emp.dno%type;
+i number(2):=0;
+begin
+open data;
+loop
+fetch data into id,d;
+if(data%found) then
+if(d=dept) then
+delete from emp where empid=id;
+i:=i+1;
+end if;
+end if;
+exit when data%notfound;
+end loop;
+insert into del_History values(d,i,sysdate);
+end;
+
+output:
+SQL> @C:\Users\Admin\Desktop\sql\emp_delete.sql
+ 22  /
+Enter value for department: 2
+old   2: dept number(3):=&department;
+new   2: dept number(3):=2;
+
+PL/SQL procedure successfully completed.
+
+SQL> select * from del_History;
+
+       DNO ROWSDELETED DT
+---------- ----------- ----------
+         2           2 26-AUG-22
