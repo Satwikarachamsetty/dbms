@@ -1,0 +1,70 @@
+SQL> create table inventory(product_id number(3),
+  2  product_name varchar(20),
+  3  quantity number(5));
+Table created.
+
+SQL> insert into inventory values(1,'apple',2);
+
+1 row created.
+
+SQL> insert into inventory values(2,'samsung',0);
+
+1 row created.
+
+SQL> insert into inventory values(3,'oneplus',1);
+
+1 row created.
+SQL> create table purchase_Record(product_id number(3),
+  2  status varchar(30),
+  3  dt varchar(10));
+
+Table created.
+
+declare
+q inventory.quantity%type;
+id inventory.product_id%type:=&id;
+s varchar(30);
+cursor data is select quantity from inventory where product_id=id;
+begin
+open data;
+fetch data into q;
+loop
+if(q>0) then
+update inventory
+set quantity=quantity-1
+where product_id=id;
+s:='PURCHASED';
+insert into purchase_Record values(id,s,sysdate);
+fetch data into q;
+else
+s:='OUT OF STOCK';
+insert into purchase_Record values(id,s,sysdate);
+fetch data into q;
+end if;
+exit when data%notfound;
+end loop;
+end;
+
+
+output:
+SQL> @C:\Users\Admin\Desktop\sql\purchase.sql
+ 25  /
+Enter value for id: 1
+old   3: id inventory.product_id%type:=&id;
+new   3: id inventory.product_id%type:=1;
+
+PL/SQL procedure successfully completed.
+
+SQL> select * from inventory;
+
+PRODUCT_ID PRODUCT_NAME           QUANTITY
+---------- -------------------- ----------
+         1 apple                         1
+         2 samsung                       0
+         3 oneplus                       1
+
+SQL> select * from purchase_Record;
+
+PRODUCT_ID STATUS                         DT
+---------- ------------------------------ ----------
+         1 PURCHASED                      08-SEP-22
