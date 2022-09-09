@@ -1,0 +1,74 @@
+SQL> create table temp(id number(2),
+  2  name varchar(6));
+
+Table created.
+
+SQL> insert into temp values(1,'geetha');
+
+1 row created.
+
+SQL> insert into temp values(1,'rama');
+
+1 row created.
+
+NO_DATA_FOUND
+
+declare 
+c_id temp.id%type;
+begin
+select id into c_id from temp where id=4;
+exception
+when no_data_found then
+dbms_output.put_line('no data found!');
+end;
+
+
+SQL> @Z:\dbms\exception.sql
+ 12  /
+no data found
+
+PL/SQL procedure successfully completed.
+
+TOO_MANY_ROWS
+
+declare 
+c_id temp.id%type;
+begin
+select id into c_id from temp where id=1;
+exception
+when too_many_rows then
+dbms_output.put_line('Too many rows!');
+end;
+
+SQL> @Z:\dbms\exception.sql
+ 12  /
+Too many rows!
+
+PL/SQL procedure successfully completed.
+
+ZERO_DIVIDE
+
+declare 
+c_id temp.id%type;
+a number:=&num1;
+b number:=&num2;
+c number;
+begin
+c:=a/b;
+dbms_output.put_line(c);
+exception
+when zero_divide then
+dbms_output.put_line('dividing with zero!');
+end;
+
+SQL> @Z:\dbms\exception.sql
+ 19  /
+Enter value for num1: 7
+old   3: a number:=&num1;
+new   3: a number:=7;
+Enter value for num2: 0
+old   4: b number:=&num2;
+new   4: b number:=0;
+dividing with zero!
+
+PL/SQL procedure successfully completed.
