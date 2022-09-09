@@ -1,0 +1,44 @@
+create table emp(empno number(3),
+name varchar(15),
+salary number(10),
+designation varchar(8),
+deptid number(2));
+
+Table Created.
+declare
+id emp.empno%type;
+cursor c1 is select empno from emp order by salary desc;
+cursor c2 is select empno from emp order by salary;
+begin
+open c1;
+dbms_output.put_line('top earners');
+loop
+fetch c1 into id;
+exit when c1%rowcount>5;
+dbms_output.put_line(id);
+end loop;
+open c2;
+dbms_output.put_line('least earners');
+loop
+fetch c2 into id;
+exit when c2%rowcount>5;
+dbms_output.put_line(id);
+end loop;
+end;
+
+SQL>  @Z:\dbms\labcycle_3_9.sql
+ 21  /
+top earners
+1
+5
+4
+3
+7
+least earners
+2
+6
+7
+3
+4
+
+PL/SQL procedure successfully completed.
