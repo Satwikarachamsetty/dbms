@@ -1,0 +1,56 @@
+SQL> create table inventory(product_id number(3),
+  2  product_name varchar(20),
+  3  quantity number(5));
+Table created.
+
+SQL> insert into inventory values(1,'apple',1);
+
+1 row created.
+
+SQL> insert into inventory values(2,'samsung',0);
+
+1 row created.
+
+SQL> insert into inventory values(3,'oneplus',-2);
+
+1 row created.
+
+declare 
+q inventory.quantity%type;
+id inventory.product_id%type;
+cursor data is select product_id,quantity from inventory;
+check_quantity exception;
+begin
+open data;
+loop
+fetch data into id,q;
+exit when data%notfound;
+if q>=0 then 
+dbms_output.put_line('number of quantities of  product '||id||' are '||q);
+else raise check_quantity;
+end if;
+end loop;
+exception
+when check_quantity then
+dbms_output.put_line('quantity is less than zero!!');
+update inventory set quantity=0 where product_id=id;
+dbms_output.put_line('table updated');
+end;
+
+output:
+SQL>  @ C:\Users\Admin\Desktop\sql\user_defined_exception.sql
+ 22  /
+number of quantities of  product 1 are 1
+number of quantities of  product 2 are 0
+quantity is less than zero!!
+table updated
+
+PL/SQL procedure successfully completed.
+
+SQL> select * from inventory;
+
+PRODUCT_ID PRODUCT_NAME           QUANTITY
+---------- -------------------- ----------
+         1 apple                         1
+         2 samsung                       0
+         3 oneplus                       0
