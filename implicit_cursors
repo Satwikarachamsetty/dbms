@@ -1,0 +1,55 @@
+SQL> create table emp(empid number(3),
+  2  name varchar(20),
+  3  salary number(10)
+  4  dno number(3));
+
+Table created.
+
+SQL> insert into emp values(1,'geetha',2000000,1);
+
+1 row created.
+
+SQL> insert into emp values(2,'ram',15000,2);
+
+1 row created.
+
+SQL> insert into emp values(3,'nani',12000,2);
+
+1 row created.
+SQL> create table del_History(dno number(3),
+  2  Rowsdeleted number(3),
+  3  dt varchar(10));
+
+Table created.
+
+declare
+dept_no emp.dno%type:=&department;
+temp number;
+begin
+delete from emp where dno=dept_no;
+temp:=SQL%rowcount;
+dbms_output.put_line(temp);
+insert into del_history values(dept_no,temp,sysdate);
+end;
+
+output:
+SQL>  @C:\Users\Admin\Desktop\sql\emp_delete_implicitcursors.sql
+ 10  /
+Enter value for department: 2
+old   2: dept_no emp.dno%type:=&department;
+new   2: dept_no emp.dno%type:=2;
+2
+
+PL/SQL procedure successfully completed.
+
+SQL> select * from emp;
+
+     EMPID NAME                     SALARY        DNO
+---------- -------------------- ---------- ----------
+         1 geetha                  2000000          1
+
+SQL> select * from del_history;
+
+       DNO ROWSDELETED DT
+---------- ----------- ----------
+         2           2 12-SEP-22
