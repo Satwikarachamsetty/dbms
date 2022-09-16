@@ -1,0 +1,46 @@
+  1* insert into employee values(1,'geetha',80000,1)
+SQL> /
+
+1 row created.
+
+SQL> insert into employee values(2,'satya',35000,2);
+
+1 row created.
+
+SQL> insert into employee values(3,'yamuna',45000,1);
+
+1 row created.
+
+SQL> insert into employee values(4,'keerthy',55000,1);
+
+1 row created.
+
+SQL> insert into employee values(5,'ramya',49000,1);
+
+1 row created.
+
+create or replace function find_sum(dept  number) return number is
+sal_sum number(10);
+begin
+select sum(salary) into sal_sum from employee where dept_no=dept group by dept_no;
+return sal_sum;
+end;
+
+declare
+dept employee.dept_no%type:=&department;
+total_sum number(10);
+begin
+total_sum:=find_sum(dept);
+dbms_output.put_line(total_sum);
+end;
+
+output
+
+SQL> @C:\Users\Admin\Desktop\sql\find_sum.sql
+  8  /
+Enter value for department: 1
+old   2: dept employee.dept_no%type:=&department;
+new   2: dept employee.dept_no%type:=1;
+229000
+
+PL/SQL procedure successfully completed.
