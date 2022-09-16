@@ -1,0 +1,67 @@
+  1* insert into employee values(1,'geetha',80000,1)
+SQL> /
+
+1 row created.
+
+SQL> insert into employee values(2,'satya',35000,2);
+
+1 row created.
+
+SQL> insert into employee values(3,'yamuna',45000,1);
+
+1 row created.
+
+SQL> insert into employee values(4,'keerthy',55000,1);
+
+1 row created.
+
+SQL> insert into employee values(5,'ramya',49000,1);
+
+1 row created.
+
+create or replace function incr(emp_id number) return number is
+sal employee.salary%type;
+final_salary number;
+begin
+select salary into sal from employee where empno=emp_id;
+if sal<=3000 then 
+final_salary:=sal+(0.3*sal);
+elsif sal>3000 and sal<=6000 then
+final_salary:=sal+(0.2*sal);
+else
+final_salary:=sal+(0.1)*sal;
+end if;
+return final_salary;
+end;
+
+declare 
+id employee.empno%type:=&employeeid;
+sal number;
+final_sal number;
+begin
+final_sal:=incr(id);
+update employee set salary=final_sal where empno=id;
+end;
+
+output:
+SQL> @C:\Users\Admin\Desktop\sql\increment.sql
+ 15  /
+
+Function created.
+SQL> @C:\Users\Admin\Desktop\sql\increment_salary.sql
+  9  /
+Enter value for employeeid: 5
+old   2: id employee.empno%type:=&employeeid;
+new   2: id employee.empno%type:=5;
+
+PL/SQL procedure successfully completed.
+
+SQL> select * from employee;
+
+     EMPNO NAME                SALARY    DEPT_NO
+---------- --------------- ---------- ----------
+         1 geetha               80000          1
+         2 satya                35000          2
+         3 yamuna               45000          1
+         4 keerthy              55000          1
+         5 ramya                53900          1
