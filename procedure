@@ -1,0 +1,54 @@
+create or replace procedure raise_salary(eno in number,increment in number)is
+begin
+update emp set salary=salary+increment where empno=eno;
+end;
+
+declare
+id emp.empno%type:=&employee_id;
+sal emp.salary%type:=&incrementsalary;
+curr_salary emp.salary%type;
+empid emp.empno%type;
+salary_notfound exception;
+begin
+select empno,salary into empid,curr_salary from emp where empno=id;
+if curr_salary is null then raise salary_notfound;
+else
+raise_salary(id,sal);
+end if;
+exception
+when no_data_found then
+dbms_output.put_line('employee number not found');
+when salary_notfound then
+dbms_output.put_line('salary not found');
+end;
+
+output:
+SQL> @Z:\dbms\raise_salary.sql
+  5  /
+
+Procedure created.
+
+SQL> @Z:\dbms\procedure.sql
+ 19  /
+Enter value for employee_id: 2
+old   2: id emp.empno%type:=&employee_id;
+new   2: id emp.empno%type:=2;
+Enter value for incrementsalary: 234
+old   3: sal emp.salary%type:=&incrementsalary;
+new   3: sal emp.salary%type:=234;
+
+PL/SQL procedure successfully completed.
+
+SQL> select * from emp;
+
+     EMPNO NAME                SALARY DESIGNAT     DEPTID
+---------- --------------- ---------- -------- ----------
+         1 geetha               90000 btech             3
+         2 satya                23234 mba               2
+         3 yamini               45000 mca               1
+         4 rohith               55340 btech             3
+         5 keerthy              78000 bsc               4
+         6 nani                 23000 mba               2
+         7 tanmayi              38990 mca               1
+
+7 rows selected.
