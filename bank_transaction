@@ -1,0 +1,86 @@
+  1* insert into Bank_Main values(1001,'ramu','guntur','S',15000)
+SQL> /
+
+1 row created.
+
+SQL> insert into Bank_Main values(1002,'bindu','vizag','S',10000);
+
+1 row created.
+
+  1* insert into Bank_Main values(1003,'abhilash','hyderabad','C',10000)
+SQL> /
+
+1 row created.
+
+SQL> insert into Bank_Main values(1004,'babu','vijayawada','C',9000);
+
+1 row created.
+  1* insert into Bank_Trans values(1001,'D','02-09-2022',5000,'N')
+SQL> /
+
+1 row created.
+
+SQL> insert into Bank_Trans values(1002,'W','02-09-2022',2000,'Y');
+
+1 row created.
+
+SQL> insert into Bank_Trans values(1003,'D','02-09-2022',4000,'Y');
+
+1 row created.
+
+SQL> insert into Bank_Trans values(1001,'W','02-09-2022',10000,'N');
+
+1 row created.
+declare
+ac_no  Bank_Trans.acc_no%type;
+transaction Bank_Trans.tr_type%type;
+amount Bank_trans.tr_amt%type;
+flag Bank_Trans.upd_flag%type;
+balance Bank_Main.curr_balance%type;
+insufficient_balance exception;
+cursor data is select acc_no,tr_type,tr_amt,upd_flag from Bank_Trans;
+begin
+open data;
+loop
+fetch data into ac_no,transaction,amount,flag;
+exit when data%notfound;
+if(flag='N') then
+if(transaction='W') then 
+select curr_balance into balance from Bank_Main where acc_no=ac_no;
+if(balance<amount) then raise insufficient_balance;
+else
+update Bank_Main set curr_balance=curr_balance-amount where acc_no=ac_no;
+end if;
+else
+update Bank_Main set curr_balance=curr_balance+amount where acc_no=ac_no;
+end if;
+update Bank_Trans set upd_flag='Y' where acc_no=ac_no;
+end if;
+end loop;
+exception
+when insufficient_balance then
+dbms_output.put_line('insufficient balance');
+end;
+
+output:
+SQL> @Z:\dbms\bank_transaction.sql
+ 31  /
+
+PL/SQL procedure successfully completed.
+SQL> select * from Bank_trans;
+
+    ACC_NO TR_ TR_DATE        TR_AMT UP
+---------- --- ---------- ---------- --
+      1001 D   02-09-2022       5000 Y
+      1002 W   02-09-2022       2000 Y
+      1003 D   02-09-2022       4000 Y
+      1001 W   02-09-2022      10000 Y
+
+SQL> select * from Bank_Main;
+
+    ACC_NO NAME            ADDRESS              ACC CURR_BALANCE
+---------- --------------- -------------------- --- ------------
+      1001 ramu            guntur               S          10000
+      1002 bindu           vizag                S          10000
+      1003 abhilash        hyderabad            C          10000
+      1004 babu            vijayawada           C           9000
